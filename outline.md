@@ -24,6 +24,7 @@ RubyMotion を全く知らない人にもある程度全体像がわかるよう
 - motion-testflight
 - BubbleWrap
 - nitron
+- formotion
 
 
 ## 情報源、コミュニティ
