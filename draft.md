@@ -5,33 +5,61 @@
 ## はじめに
 この記事では Ruby で iOS アプリが開発できる [RubyMotion](http://www.rubymotion.com) を紹介します。
 
-筆者が実際に仕事で使ってみた感想なども踏まえ、今後購入を考えている個人や、導入を検討中の企業の方にも参考にしていただけると幸いです。
+筆者が実際に仕事で使ってみた感想なども踏まえ、今後購入を考えている個人や導入を検討中の企業の方にも参考にしていただけると幸いです。
 
 
 ### RubyMotion とは
-簡潔に言ってしまうと、Ruby で iOS の SDK を使うことができるツールです。開発は使い慣れたテキストエディタ、テストは spec (正確にはbacon)、ビルドは rake コマンドで行うという、とても Rubyist フレンドリーなものです。
+簡潔に言ってしまうと、Ruby で iOS の SDK を使うことができるツールです。
+開発は使い慣れたテキストエディタ、テストは spec (正確にはbacon)、ビルドは rake コマンドという、Rubyist にとっては普段慣れ親しんだ環境で開発を行うことができます。
 
 [MacRuby](http://macruby.org) をベースに開発されていて、ソースコードの多くが MacRuby と同一だそうです。
-
-主要開発者である、開発元の [HipByte社](http://www.hipbyte.com) 所属の Laurent Sansonetti さんは以前 Apple で MacRuby の開発をされていた方です。
+RubyMotion 自体はリリースが 2012 年 5 月と非常に若い製品ではありますが、実績のある MacRuby をベースとしているのでその分安心感は高いかもしれません。
+また主要開発者である、開発元の [HipByte社](http://www.hipbyte.com) 所属の Laurent Sansonetti さんは以前 Apple で MacRuby の開発をされていた方です。
 
 なお RubyMotion は有料であり、お試しプランなどもありません。
 (企業等での多数のライセンスの導入や、学割などを希望される場合は直接サポートに連絡すると優遇を受けられるそうです。)
 
+RubyMotion の実際に動作しているところを見たい場合は、公式サイトの [RubyMotion - Getting Started](http://www.rubymotion.com/getting-started/) に掲載されている動画や [The Pragmatic Studio | RubyMotion Screencast](http://pragmaticstudio.com/screencasts/rubymotion) をご覧になるのがおすすめです。
+
 
 ### 特徴
-- LLVM によって直接バイナリコードに変換されます。つまり Objective-C にコードを変換したり、Ruby の VM 経由でスクリプトを動かす訳ではありません。
-- シミュレータを再起動すること無く REPL から任意のコードを実行できますので、View の調整やちょこっと API の挙動を確かめたり、ということが容易にできます。
-- Test コードを Ruby で書くことができます。モデルのテスト〜 UIAutomation 相当のテストも Ruby で書けます。
+- Ruby で記述したコードは LLVM によって直接バイナリコードに変換されます。
+つまり Objective-C にコードを変換したり、Ruby の VM 経由でスクリプトを動かす訳ではありませんので性能の低下を心配する必要がありません。
+- シミュレータを再起動すること無く REPL から任意のコードを実行でき、View の調整やちょこっと API の挙動を確かめたり、ということが容易にできます。
+- Test コードを Ruby で書くことができます。モデルのユニットテストから UIAutomation 相当のテストも Ruby で書けます。
 - Android アプリは開発できません。
 
 
 ## RubyMotion の始め方
-簡単なサンプルを作ってみて動かせるようなチュートリアルをコード付きで掲載します。
+
 
 ### 購入〜インストール
+[RubyMotion Store](http://sites.fastspring.com/hipbyte/product/rubymotion) からライセンスを購入します。支払いはクレジットカード、もしくは PayPal アカウントで購入が可能です。
+
+購入が完了するとライセンスキーとインストーラの URL が購入時に登録したメールアドレスあてに送られてきますので、記載された指示に従ってインストールを行ってください。
+
+インストールが完了すると、 `motion` というコマンドが使えるようになります。
+
+また、`/Library/RubyMotion` 以下に必要なファイルがインストールされます。
+
+```
+$ which motion
+/usr/bin/motion
+$ motion -v
+1.20 # この原稿執筆時の最新バージョンです。
+```
+
+
 ### 動かしてみよう
+インストールが完了したら、さっそく簡単なプロジェクトを作ってみたいと思います。
+
+
+
+
 ### テストについて
+
+
+## 開発おすすめツール
 
 
 ## ライブラリ
@@ -43,6 +71,7 @@
 - BubbleWrap
 - nitron
 - formotion
+- rm-redgreen
 
 
 ## 情報源、コミュニティ
