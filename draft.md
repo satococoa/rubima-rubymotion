@@ -4,12 +4,14 @@
 
 
 ## はじめに
-この記事では 2012 年 5 月のゴールデンウィーク中に突如発売された、Ruby で iOS アプリが開発できる [RubyMotion](http://www.rubymotion.com) を紹介します。
+
+この記事では 2012 年 5 月のゴールデンウィーク中に発売された、Ruby で iOS アプリが開発できるという [RubyMotion](http://www.rubymotion.com) を紹介します。
 
 筆者が実際に仕事で使ってみた感想なども踏まえ、今後購入を考えている個人や導入を検討中の企業の方にも参考にしていただけると幸いです。
 
 
 ### RubyMotion とは
+
 [RubyMotion](http://www.rubymotion.com) とは Ruby で iOS アプリを作るための製品です。
 開発には使い慣れたテキストエディタ、テストは spec、ビルドは rake コマンドという、Rubyist にとっては普段慣れ親しんだ環境で開発を行うことができます。
 
@@ -41,6 +43,7 @@ RubyMotion の良いところは以下の 3 点だと思います。(一番良�
 ## RubyMotion の始め方
 
 ### 購入〜インストール
+
 [RubyMotion Store](http://sites.fastspring.com/hipbyte/product/rubymotion) からライセンスを購入します。支払いはクレジットカード、もしくは PayPal アカウントで購入が可能です。
 
 ライセンスは 1 年間有効で、期間中はソフトウェアのアップデートとサポートチケットによるサポートを受けることができます。
@@ -73,6 +76,7 @@ Commands:
 
 
 ### 動かしてみよう
+
 インストールが完了したら、さっそく簡単なプロジェクトを作ってみたいと思います。
 まずは `motion` コマンドでコードを生成します。
 
@@ -346,6 +350,7 @@ index d29b2cc..03a06a3 100644
 
 
 ### テストを書こう
+
 現在の RubyMotion では [Bacon](https://github.com/chneukirchen/bacon/) という rspec クローンを Objective-C 用に拡張した [MacBacon](https://github.com/alloy/MacBacon) を利用してテストを書くことができます。
 
 ユニットテストのレイヤーから、バージョン 1.15 で追加された UIAutomation 相当の View, Controller のテストが書けるようになっています。
@@ -481,49 +486,84 @@ Bacon::Error: "Hello!".==("Hello") failed
 spec の中で typo したようです。修正は皆さんにおまかせします。
 
 
-## RubyMotion の制限
+## 開発おすすめツール、ライブラリ
 
-
-
-## 開発おすすめツール
 RubyMotion で開発を行うにあたって、定番のツールを紹介したいと思います。
 iOS 開発を行っている方にとっては既になじみ深いものもありますね。
 
 ### テキストエディタのプラグイン / 拡張
 
-### Dash
+- [SublimeRubyMotionBuilder](https://github.com/haraken3/SublimeRubyMotionBuilder)  
+最近人気の [Sublime Text](http://www.sublimetext.com) 用の拡張です。筆者もこれを使っています。
 
-### TestFlight
+- [RubyMotion.tmbundle](https://github.com/libin/RubyMotion.tmbundle)  
+[TextMate](http://macromates.com) の方はこちら。
+
+- [snipmate-snippets-rubymotion](https://github.com/rcyrus/snipmate-snippets-rubymotion)  
+vim の方はこの snippets と ctags を使うといいと思います。
+
+- [Rubymotion Completion With Emacs](http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/)
+Emacs な方はこのエントリに従って設定するのが良さそうです。
 
 
-## ライブラリ
-現在広く使われているライブラリを紹介します。
-なお RubyMotion では従来の RubyGems は使用できず、RubyMotion 用に作られた gem しか使えませんのでお気をつけ下さい。
+### [Dash](http://itunes.apple.com/jp/app/dash-docs-snippets/id458034879?mt=12)
 
-- motion-cocoapods
-- motion-testflight
-- BubbleWrap
+iOS SDK のリファレンスを参照するために使います。他にも Ruby や Rails のリファレンスも参照できる優れものです。
 
-- nitron
-- formotion
-- rm-redgreen
+### [TestFlight](https://testflightapp.com/)
+
+iOS 開発では定番！
+Adhoc 版アプリを素早く手軽に配布するために使います。
+
+
+### 定番ライブラリ
+
+#### [motion-cocoapods](https://github.com/HipByte/motion-cocoapods)
+
+Objective-C 版 Bundler とも言える、ライブラリの依存関係の管理を行う [CocoaPods](http://cocoapods.org) を RubyMotion から簡単に使えるようにした gem です。
+
+これのおかげで Objective-C で作られた [AFNetworking](https://github.com/AFNetworking/AFNetworking) などの定番ライブラリを手軽に使うことができます。
+
+
+#### [motion-testflight](https://github.com/HipByte/motion-testflight)
+
+上述の TestFlight を RubyMotion から手軽に使うための gem です。
+
+この gem を利用すると`rake testflight notes="foo"`のように、コマンドラインから TestFlight を通じたテスト版の配布ができてしまいます。
+
+
+#### [BubbleWrap](http://bubblewrap.io)
+
+RubyMotion を使った iOS 開発をさらに Ruby らしく書けるようにした gem です。
+
+
+### [rm-redgreen](https://github.com/mdks/rm-redgreen)
+
+spec の実行結果に色を付ける gem です。
+
+
+他にも [nitron](https://github.com/mattgreen/nitron), [formotion](https://github.com/clayallsopp/formotion) なども人気の高い gem です。
 
 
 ## 情報源、コミュニティ
+
 まだ若い製品であるため、日本語のまとまった情報はまだあまりありません。  
 しばらくは英語の情報を主に見るようにするといいでしょう。
 
 ### 英語
+
 - [Developer Center](http://www.rubymotion.com/developer-center/) (公式)
 - [Google Group](http://groups.google.com/group/rubymotion) (公式)
 - [HipByte/RubyMotion](https://github.com/HipByte/RubyMotion) (公式)
 - [RubyMotion Tutorial](http://rubymotion-tutorial.com)
 
 ### 日本語
+
 - [Facebook グループ](https://www.facebook.com/groups/149315595198329/)
 - [RubyMotionJP](http://rubymotion.jp/)
 
 ### RubyMotionJP について
+
 先日[第1回 RubyMotion 勉強会](http://connpass.com/event/665/)を東京にて開催いたしました。
 
 その懇親会の席でそろそろ日本語の RubyMotion の情報をどこかに集約した方がいいのでは……という話になり、Github 上に Organization を立ち上げました。([RubyMotionJP](https://github.com/RubyMotionJP))
