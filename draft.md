@@ -350,13 +350,135 @@ index d29b2cc..03a06a3 100644
 
 ユニットテストのレイヤーから、バージョン 1.15 で追加された UIAutomation 相当の View, Controller のテストが書けるようになっています。
 
-試しに先ほど作ったプロジェクトのテストを書いてみましょう。
+エディタで`spec/main_spec.rb`を開いてください。以下のようなコードが記述されています。
 
-まずは実行してみます。
+```
+describe "Application 'Hello'" do
+  before do
+    @app = UIApplication.sharedApplication
+  end
+
+  it "has one window" do
+    @app.windows.size.should == 1
+  end
+end
+```
+
+アプリケーションに一つの window があることをテストしています。
+実行してみます。
 
 ```
 $ rake spec
+     Build ./build/iPhoneSimulator-5.1-Development
+   Compile /Library/RubyMotion/lib/motion/spec.rb
+   Compile /Library/RubyMotion/lib/motion/spec/helpers/ui.rb
+   Compile ./spec/main_spec.rb
+    Create ./build/iPhoneSimulator-5.1-Development/Hello_spec.app
+      Link ./build/iPhoneSimulator-5.1-Development/Hello_spec.app/Hello
+    Create ./build/iPhoneSimulator-5.1-Development/Hello_spec.app/Info.plist
+    Create ./build/iPhoneSimulator-5.1-Development/Hello_spec.app/PkgInfo
+    Create ./build/iPhoneSimulator-5.1-Development/Hello_spec.dSYM
+  Simulate ./build/iPhoneSimulator-5.1-Development/Hello_spec.app
+Application 'Hello'
+  - has one window
+
+1 specifications (1 requirements), 0 failures, 0 errors
 ```
+
+図らずも既に仕様を満たしていたのでテストが通りました。
+(筆者はテストが一発で通ることに恐怖を感じるので、一応`@app.windows.size.should == 0`としてテストが失敗することも確認しました。)
+
+では先ほど作ったプロジェクトのテストを書いてみましょう。
+
+```
+describe "Application 'Hello'" do
+  before do
+    @app = UIApplication.sharedApplication
+  end
+
+  it "has one window" do
+    @app.windows.size.should == 1
+  end
+
+  describe "rootViewController" do
+    before do
+      @controller = @app.keyWindow.rootViewController
+    end
+
+    it "is an instance of MyViewController" do 
+      @controller.class.should == MyViewController
+    end
+  end
+
+end
+```
+
+試しにコントローラのクラスが正しく `MyViewController` であることをテストしました。
+テストを実行してみてください。
+
+```
+$ rake spec
+     Build ./build/iPhoneSimulator-5.1-Development
+   Compile ./spec/main_spec.rb
+      Link ./build/iPhoneSimulator-5.1-Development/Hello_spec.app/Hello
+    Create ./build/iPhoneSimulator-5.1-Development/Hello_spec.dSYM
+  Simulate ./build/iPhoneSimulator-5.1-Development/Hello_spec.app
+Application 'Hello'
+  - has one window
+
+rootViewController
+  - is an instance of MyViewController
+
+2 specifications (2 requirements), 0 failures, 0 errors
+```
+
+正しく通りましたでしょうか。
+
+では次にボタンをタップしたときの動作を検証します。`spec/my_view_controller_spec.rb`を作成し、以下のように記述しました。
+
+```
+describe "The 'My View Controller' view" do
+  tests MyViewController
+
+  before do
+    @label = view('foo')
+  end
+
+  it "change label's title" do
+    tap('Say Hello!')
+    @label.text.should == 'Hello'
+  end
+end
+```
+
+実行してみます。
+
+```
+$ rake spec
+     Build ./build/iPhoneSimulator-5.1-Development
+  Simulate ./build/iPhoneSimulator-5.1-Development/Hello_spec.app
+Application 'Hello'
+  - has one window
+
+rootViewController
+  - is an instance of MyViewController
+
+The 'My View Controller' view
+  - change label's title [FAILED]
+
+Bacon::Error: "Hello!".==("Hello") failed
+        spec.rb:553:in `satisfy:': The 'My View Controller' view - change label's title
+        spec.rb:567:in `method_missing:'
+        spec.rb:183:in `block in run_spec_block'
+         4:in `execute_block'
+        spec.rb:183:in `run_spec_block'
+        spec.rb:198:in `run'
+
+3 specifications (3 requirements), 1 failures, 0 errors
+```
+
+残念ながらエラーが出てしまいました。
+spec の中で typo したようです。修正は皆さんにおまかせします。
 
 
 ## RubyMotion の制限
