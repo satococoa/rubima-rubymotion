@@ -204,8 +204,145 @@ end
 Storyboard を使うこともできますが、ここではコードのみで GUI を構築します。
 
 ```
+class AppDelegate
+  def application(application, didFinishLaunchingWithOptions:launchOptions)
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    controller = UIViewController.new
+    controller.view.backgroundColor = UIColor.whiteColor
+
+    label = UILabel.new.tap do |l|
+      l.text = 'foo'
+      l.frame = [[10, 10], [100, 60]]
+    end
+    controller.view.addSubview(label)
+
+    button = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |b|
+      b.setTitle('Say Hello!', forState:UIControlStateNormal)
+      b.frame = [[110, 300], [100, 60]]
+    end
+    controller.view.addSubview(button)
+
+    @window.rootViewController = controller
+    @window.makeKeyAndVisible
+    true
+  end
+end
+```
+
+UILabel と UIButton を追加してみました。実行してみると、ラベルの位置が気になりませんか？
+GUI の調整を修正しては実行して、というのを何度も繰り返すのは大変なので、REPL で位置の調整を試してみましょう。
+
+![Screenshot1](./screenshot1.png)
+
+コマンドキーを押しながらシミュレータ上でポインタを動かすと、赤い枠線がポインタの下の UI 部品を囲み、それと同時に端末上のプロンプトが `(main)>` から `(#<UILabel:0x6a015c0>)>` に変わるのが確認できましたでしょうか？(`0x6a015c0` は同じ数字ではなくても大丈夫です。)
+
+この状態でクリックすると、REPL が 選択されたオブジェクトを self とした状態で入力待ちになります。以下のコードを入力してみましょう。
 
 ```
+(#<UILabel:0x6c08f60>)> self.frame = [[110, 100], [100, 20]]
+=> [[110, 100], [100, 20]]
+```
+
+ラベルの位置が変更できたと思います。
+何度もコンパイルし直して位置を調整するよりも簡単に UI 部品の位置、大きさの調整ができることを実感できますね。
+忘れずに元の `app_delegate.rb` の 9 行目を今確認した frame の値に書き直しておきましょう。
+
+```
+    label = UILabel.new.tap do |l|
+      l.text = 'foo'
+      l.frame = [[110, 100], [100, 20]]
+    end
+    controller.view.addSubview(label)
+```
+
+さて、今はボタンをタップしても何も起きません。タップするとラベルの文字列が変更されるように修正したいと思いますが、このまま `app_delegate.rb` にコードを書いていくと複雑になってしまうので、UIViewController を継承した独自の MyViewController クラスを定義し、ファイルを分けるリファクタリングを行います。
+
+リファクタリング後の 2 ファイルは以下のようになります。
+実行して、先ほどと同じ結果になることを確認してください。
+
+```
+# app/app_delegate.rb
+class AppDelegate
+  def application(application, didFinishLaunchingWithOptions:launchOptions)
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    my_view_controller = MyViewController.new
+
+    @window.rootViewController = my_view_controller
+    @window.makeKeyAndVisible
+    true
+  end
+end
+
+# app/my_view_controller.rb
+class MyViewController < UIViewController
+  def viewDidLoad
+    super
+
+    view.backgroundColor = UIColor.whiteColor
+
+    label = UILabel.new.tap do |l|
+      l.text = 'foo'
+      l.frame = [[110, 100], [100, 20]]
+    end
+    view.addSubview(label)
+
+    button = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |b|
+      b.setTitle('Say Hello!', forState:UIControlStateNormal)
+      b.frame = [[110, 300], [100, 60]]
+    end
+    view.addSubview(button)
+
+  end
+end
+```
+
+あれ？と思った方もいらっしゃるかもしれません。RubyMotion では`require`が使えない代わりに、`app`ディレクトリ以下のファイルは自動的に読み込まれるようになっています。
+(もし読み込まれる順序が問題でコンパイルできない場合は `Rakefile` で `app.files_dependencies` メソッドを使って指定できます。[2.1. Files Dependencies](http://www.rubymotion.com/developer-center/guides/project-management/#_files_dependencies))
+
+ではボタンをタップしたときの動作を追加してみます。
+変更点を diff 形式で掲載します。
+
+```
+$ git diff
+diff --git a/app/my_view_controller.rb b/app/my_view_controller.rb
+index d29b2cc..03a06a3 100644
+--- a/app/my_view_controller.rb
++++ b/app/my_view_controller.rb
+@@ -4,17 +4,24 @@ class MyViewController < UIViewController
+ 
+     view.backgroundColor = UIColor.whiteColor
+ 
+-    label = UILabel.new.tap do |l|
++    @label = UILabel.new.tap do |l|
+       l.text = 'foo'
+       l.frame = [[110, 100], [100, 20]]
+     end
+-    view.addSubview(label)
++    view.addSubview(@label)
+ 
+     button = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |b|
+       b.setTitle('Say Hello!', forState:UIControlStateNormal)
+       b.frame = [[110, 300], [100, 60]]
++      b.addTarget(self,
++        action:'say_hello',
++        forControlEvents:UIControlEventTouchUpInside)
+     end
+     view.addSubview(button)
+ 
+   end
++
++  def say_hello
++    @label.text = 'Hello!'
++  end
+ end
+\ No newline at end of file
+```
+
+まず別のメソッドからラベルが見えるように UILabel のオブジェクトをインスタンス変数に格納するように変更しました。
+さらに、`say_hello`というメソッドを定義し、その中でラベルのプロパティを変更しています。
+そしてボタンがタップされたときに呼び出されるメソッドを`addTarget:action:forControlEvents:`メソッドで指定して完成です。
+
+実行してみて意図通り動作することを確認してください。
 
 
 ### テストを書こう
