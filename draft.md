@@ -568,11 +568,18 @@ spec の実行結果に色を付ける gem です。
 
 その懇親会の席でそろそろ日本語の RubyMotion の情報をどこかに集約した方がいいのでは……という話になり、Github 上に Organization を立ち上げました。([RubyMotionJP](https://github.com/RubyMotionJP))
 
-当面は [RubyMotion Tutorial](http://rubymotion-tutorial.com) の翻訳を進めて行こうと考えております。
+当面は [RubyMotion Tutorial](http://rubymotion-tutorial.com) の翻訳を進めていこうと考えております。
 
 
 ## まとめ
 
+やや駆け足ではありますが、これから RubyMotion を始めたいと考える方のスタートダッシュをお手伝いできるよう、広く浅くまとめてみました。
+
+また導入検討中の方の参考になるように簡単なコード例を掲載することで、開発の雰囲気やメリット／デメリットを感じていただけたのではないでしょうか。
+
+何か質問等がございましたらどうぞお気軽に facebook グループや Twitter で #rubymotionjp ハッシュタグをつけてつぶやいていただけると、誰かが拾って回答を差し上げることができると思います。
+
+この記事を通じて、多くの方が楽しく iOS アプリの開発ができるようになることを願っています。
 
 
 ## 著者について
