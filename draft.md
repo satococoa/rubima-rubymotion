@@ -5,38 +5,38 @@
 
 ## はじめに
 
-この記事では 2012 年 5 月のゴールデンウィーク中に発売された、Ruby で iOS アプリが開発できるという [RubyMotion](http://www.rubymotion.com) を紹介します。
+この記事では 2012 年 5 月に発売された、Ruby で iOS アプリが開発できる [RubyMotion](http://www.rubymotion.com) を紹介します。
 
-筆者が実際に仕事で使ってみた感想なども踏まえ、今後購入を考えている個人や導入を検討中の企業の方にも参考にしていただけると幸いです。
+今後購入を考えている個人や導入を検討中の企業の方、買ってはみたけれども次にどうして良いかわからない、という方などの参考になると幸いです。
 
 
-### RubyMotion とは
+## RubyMotion とは
 
 [RubyMotion](http://www.rubymotion.com) とは Ruby で iOS アプリを作るための製品です。
 開発には使い慣れたテキストエディタ、テストは spec、ビルドは rake コマンドという、Rubyist にとっては普段慣れ親しんだ環境で開発を行うことができます。
 
-[MacRuby](http://macruby.org) をベースに開発されていて、ソースコードの多くが MacRuby と同一だそうです。
+[MacRuby](http://macruby.org) をベースに開発されていてソースコードの多くが MacRuby と同一だそうです。
 RubyMotion 自体はリリースが 2012 年 5 月と非常に若い製品ではありますが、実績のある MacRuby をベースとしているのでその分安心感があります。
 また主要開発者である、開発元の [HipByte社](http://www.hipbyte.com) 所属の Laurent Sansonetti さんは以前 Apple で MacRuby の開発をされていた方です。
 
 なお RubyMotion は有料であり、お試しプランなどもありません。
-(企業等での多数のライセンスの導入や、学割などを希望される場合は直接サポートに連絡すると優遇を受けられるそうです。)
 RubyMotion の実際に動作しているところを見たい場合は、公式サイトの [RubyMotion - Getting Started](http://www.rubymotion.com/getting-started/) に掲載されている動画や [The Pragmatic Studio | RubyMotion Screencast](http://pragmaticstudio.com/screencasts/rubymotion) をご覧になるのがおすすめです。
+(企業等での多数のライセンスの導入や、学割などを希望される場合は直接サポートに連絡すると優遇を受けられるそうです。)
 
 
 ### RubyMotion の特徴
 
 RubyMotion の良いところは以下の 3 点だと思います。(一番良い点は「慣れ親しんだ Ruby で iOS のアプリが作れる」というただそれだけに尽きると感じていますが。)
 
-1. Ruby で記述したコードは LLVM によって直接バイナリコードに変換されます。
-1. シミュレータを再起動すること無く REPL から任意のコードを実行でき、View の調整やちょこっと API の挙動を確かめたり、ということが容易にできます。
-1. Test コードを Ruby で書くことができます。モデルのユニットテストから UIAutomation 相当のテストも Ruby で書けます。
+1. Ruby で記述したコードは LLVM によって直接バイナリコードに変換されるため、性能面でのデメリットの心配がありません。
+1. 再コンパイルすること無く REPL から任意のコードを実行でき、View の調整やちょこっと API の挙動を確かめたり、ということが容易にできます。
+1. Test コードを Ruby で書くことができます。モデルのユニットテストから UIAutomation 相当のテストまですべて Ruby で書けます。
 
 
-逆にちょっと気をつけた方がいいのは以下の点です。
+逆に気をつけた方がいいのは以下の点です。
 
 1. Android アプリは開発できません。
-1. `eval` や `define_method` などのメソッドは使えません。
+1. `eval` や `define_method` などの一部のメソッドが使えません。(`define_method`は近いうちに対応予定とのことです。)
 1. `require` は使用できません。つまり既存の gem はほとんど使えません。ライブラリは基本的には RubyMotion 用に作られた gem か、Objective-C でできたものを使います。
 
 
@@ -46,15 +46,15 @@ RubyMotion の良いところは以下の 3 点だと思います。(一番良�
 
 [RubyMotion Store](http://sites.fastspring.com/hipbyte/product/rubymotion) からライセンスを購入します。支払いはクレジットカード、もしくは PayPal アカウントで購入が可能です。
 
-ライセンスは 1 年間有効で、期間中はソフトウェアのアップデートとサポートチケットによるサポートを受けることができます。
+ライセンスは 1 年間有効で期間中はソフトウェアのアップデートとサポートチケットによるサポートを受けることができます。
 アップデートとサポートが不要の場合は一度購入するだけでずっと製品を使い続けることもできます。
-なおライセンスの継続料金は新規料金の半額を予定されているそうです。
+なおライセンスの継続料金は新規料金の半額となります。(参照: [RubyMotion - Support](http://www.rubymotion.com/support/))
 
 購入が完了するとライセンスキーとインストーラの URL が購入時に登録したメールアドレスあてに送られてきますので、記載された指示に従ってインストールを行ってください。
 
-インストールが完了すると、`motion` というコマンドが使えるようになります。
+インストールが完了すると、`motion`というコマンドが使えるようになります。
 
-また、`/Library/RubyMotion` 以下に必要なファイルがインストールされます。
+また、`/Library/RubyMotion`以下に必要なファイルがインストールされます。
 
 ```
 $ which motion
@@ -78,7 +78,7 @@ Commands:
 ### 動かしてみよう
 
 インストールが完了したら、さっそく簡単なプロジェクトを作ってみたいと思います。
-まずは `motion` コマンドでコードを生成します。
+まずは`motion`コマンドでコードを生成します。
 
 ```
 $ motion create Hello
@@ -97,12 +97,12 @@ $ motion create Hello
 - app/app_delegate.rb  
 Xcode を用いて開発する場合の AppDelegate.h, AppDelegate.m に相当するのがこのファイルです。
 - resources/  
-画像やストーリーボード、CoreData のモデルファイルなどのリソースをここに置きます。
+画像や Storyboard、CoreData のモデルファイルなどのリソースをここに置きます。
 - spec/  
 テストはこのディレクトリに置きます。
 
 
-早速テキストエディタ (エディタ用の拡張等については後述) で `app/app_delegate.rb` を開いてみます。
+早速テキストエディタ (エディタ用の拡張等については後述) で app/app_delegate.rb を開いてみます。
 
 ```
 class AppDelegate
@@ -115,7 +115,7 @@ end
 デフォルトでこのようなコードが書いてあると思います。
 2 行目をご覧ください。Ruby 2.0 で取り入れられるという噂のキーワード引数のようなメソッド定義になっています。
 
-これは RubyMotion 独自の拡張ではなく、既に MacRuby で実装されているものです。ちなみに MacRuby は CRuby 1.9 系をベースに開発されていて、同様に RubyMotion の処理系も基本的には 1.9 系に準拠しています。
+これは RubyMotion 独自の拡張ではなく、MacRuby で拡張されたものです。ちなみに MacRuby は CRuby 1.9 系をベースに開発されていて、同様に RubyMotion の処理系も基本的には 1.9 系に準拠しています。
 
 早速実行してみます。
 
@@ -132,14 +132,14 @@ $ rake
 (main)> 
 ```
 
-ログにあるように、`./app/app_delegate.rb` がコンパイルされ、iOS アプリとして動作するために必要なファイルが生成されたり、といった一連の処理が行われた後、自動的に iOS シミュレータが起動したと思います。
+./app/app_delegate.rb がコンパイルされ、iOS アプリとして動作するために必要なファイルが生成されたり、といった一連の処理が行われた後、自動的に iOS シミュレータが起動します。
 
 まだ何も描画するコードを書いていませんので、シミュレータには真っ黒の画面が表示されるのみです。
 
-ここで rake コマンドを実行した端末の方に注目すると、入力待ちになっています。
-実は REPL が実装されていて、irb のように直接コードを打ち込んで実行することができます。
+ここで`rake`コマンドを実行した端末の方に注目すると、入力待ちになっています。
+実は RubyMotion には REPL が実装されていて、irb のように直接コードを打ち込んで実行することができます。
 
-少し横道にそれて実験してみましょう。プロンプトに続いてコードを入力してみてください。
+少し実験してみましょう。プロンプトに続いてコードを入力してみてください。
 
 ```
 (main)> RUBY_VERSION
@@ -153,7 +153,7 @@ Hello, world
 => nil
 ```
 
-さて、驚きは次です。引き続き端末にコードを打ち込んでください。
+さて驚きは次です。引き続き端末にコードを打ち込んでください。
 
 ```
 (main)> str.class
@@ -162,7 +162,7 @@ Hello, world
 => [String, NSMutableString, NSString, Comparable, NSObject, Kernel]
 ```
 
-なんと、クラスツリーに `NSMutableString` や `NSString` といった Objective-C 由来のクラスが混ざり込んでいます。正確にはこれも RubyMotion というよりは MacRuby の特徴なのですが、このような構造をしているために実は Ruby コードから Objective-C で定義されているメソッドまで呼び出すことができてしまいます。
+なんとクラスツリーに`NSMutableString`や`NSString`といった Objective-C 由来のクラスが混ざり込んでいます。正確にはこれも RubyMotion というよりは MacRuby の特徴なのですが、実は Ruby コードから Objective-C で定義されているメソッドまで呼び出すことができてしまいます。
 
 試してみましょう。
 
@@ -186,7 +186,7 @@ Hello, world
 (main)> exit
 ```
 
-いつまでも真っ黒な画面では寂しいので、`app_delegate.rb` にコードを記述してみましょう。
+いつまでも真っ黒な画面では寂しいので、app_delegate.rb にコードを記述してみましょう。
 
 ```
 class AppDelegate
@@ -201,8 +201,8 @@ class AppDelegate
 end
 ```
 
-コードの中身については Objective-C でアプリを開発した経験が無いと理解が難しいと思いますが、筆者は Objective-C 経験ほぼゼロの状態で RubyMotion を始めましたので、平行して勉強していくことも十分可能です。
-これで先ほど同様に rake コマンドを実行すると今度は白い背景の画面が表示されるようになったと思います。
+コードの中身については Objective-C でアプリを開発した経験が無いと理解が難しいかもしれませんが、筆者は Objective-C 経験ほぼゼロの状態で RubyMotion を始めましたので、平行して勉強していくことも十分可能です。
+これで先ほど同様に`rake`コマンドを実行すると今度は白い背景の画面が表示されるようになったと思います。
 
 では画面にボタンなどの部品を置いてみようと思います。
 Storyboard を使うこともできますが、ここではコードのみで GUI を構築します。
@@ -233,14 +233,14 @@ class AppDelegate
 end
 ```
 
-UILabel と UIButton を追加してみました。実行してみると、ラベルの位置が気になりませんか？
-GUI の調整を修正しては実行して、というのを何度も繰り返すのは大変なので、REPL で位置の調整を試してみましょう。
+`UILabel`と`UIButton`を追加してみました。実行してみると、ラベルの位置が気になりませんか？
+REPL で位置の調整を試してみましょう。
 
 ![Screenshot1](./screenshot1.png)
 
 コマンドキーを押しながらシミュレータ上でポインタを動かすと、赤い枠線がポインタの下の UI 部品を囲み、それと同時に端末上のプロンプトが `(main)>` から `(#<UILabel:0x6a015c0>)>` に変わるのが確認できましたでしょうか？(`0x6a015c0` は同じ数字ではなくても大丈夫です。)
 
-この状態でクリックすると、REPL が 選択されたオブジェクトを self とした状態で入力待ちになります。以下のコードを入力してみましょう。
+この状態でクリックすると、REPL が 選択されたオブジェクトを`self`とした状態で入力待ちになります。以下のコードを入力してみましょう。
 
 ```
 (#<UILabel:0x6c08f60>)> self.frame = [[110, 100], [100, 20]]
@@ -249,7 +249,7 @@ GUI の調整を修正しては実行して、というのを何度も繰り返�
 
 ラベルの位置が変更できたと思います。
 何度もコンパイルし直して位置を調整するよりも簡単に UI 部品の位置、大きさの調整ができることを実感できますね。
-忘れずに元の `app_delegate.rb` の 9 行目を今確認した frame の値に書き直しておきましょう。
+忘れずに元の app_delegate.rb の 9 行目を今確認した`frame`の値に変更しておきましょう。
 
 ```
     label = UILabel.new.tap do |l|
@@ -259,7 +259,8 @@ GUI の調整を修正しては実行して、というのを何度も繰り返�
     controller.view.addSubview(label)
 ```
 
-さて、今はボタンをタップしても何も起きません。タップするとラベルの文字列が変更されるように修正したいと思いますが、このまま `app_delegate.rb` にコードを書いていくと複雑になってしまうので、UIViewController を継承した独自の MyViewController クラスを定義し、ファイルを分けるリファクタリングを行います。
+さて、今はボタンをタップしても何も起きません。
+タップするとラベルの文字列が変更されるように修正したいと思いますが、このまま app_delegate.rb にコードを書いていくと複雑になってしまうので、`UIViewController`を継承した`MyViewController`クラスを定義し、ファイルを分けるリファクタリングを行います。
 
 リファクタリング後の 2 ファイルは以下のようになります。
 実行して、先ほどと同じ結果になることを確認してください。
@@ -300,8 +301,8 @@ class MyViewController < UIViewController
 end
 ```
 
-あれ？と思った方もいらっしゃるかもしれません。RubyMotion では`require`が使えない代わりに、`app`ディレクトリ以下のファイルは自動的に読み込まれるようになっています。
-(もし読み込まれる順序が問題でコンパイルできない場合は `Rakefile` で `app.files_dependencies` メソッドを使って指定できます。[2.1. Files Dependencies](http://www.rubymotion.com/developer-center/guides/project-management/#_files_dependencies))
+あれ？と思った方もいらっしゃるかもしれません。RubyMotion では`require`が使えない代わりに、app ディレクトリ以下のファイルは自動的に読み込まれるようになっています。
+(もし読み込まれる順序が問題でコンパイルできない場合は Rakefile で `app.files_dependencies` メソッドを使って指定できます。[2.1. Files Dependencies](http://www.rubymotion.com/developer-center/guides/project-management/#_files_dependencies))
 
 ではボタンをタップしたときの動作を追加してみます。
 変更点を diff 形式で掲載します。
@@ -342,7 +343,7 @@ index d29b2cc..03a06a3 100644
 \ No newline at end of file
 ```
 
-まず別のメソッドからラベルが見えるように UILabel のオブジェクトをインスタンス変数に格納するように変更しました。
+まず別のメソッドからラベルが見えるように`UILabel`のオブジェクトをインスタンス変数に格納するように変更しました。
 さらに、`say_hello`というメソッドを定義し、その中でラベルのプロパティを変更しています。
 そしてボタンがタップされたときに呼び出されるメソッドを`addTarget:action:forControlEvents:`メソッドで指定して完成です。
 
@@ -353,9 +354,9 @@ index d29b2cc..03a06a3 100644
 
 現在の RubyMotion では [Bacon](https://github.com/chneukirchen/bacon/) という rspec クローンを Objective-C 用に拡張した [MacBacon](https://github.com/alloy/MacBacon) を利用してテストを書くことができます。
 
-ユニットテストのレイヤーから、バージョン 1.15 で追加された UIAutomation 相当の View, Controller のテストが書けるようになっています。
+ユニットテストのレイヤーから、バージョン 1.15 以降では UIAutomation 相当の View, Controller のテストが書けるようになっています。
 
-エディタで`spec/main_spec.rb`を開いてください。以下のようなコードが記述されています。
+エディタで spec/main_spec.rb を開いてください。以下のようなコードが記述されています。
 
 ```
 describe "Application 'Hello'" do
@@ -369,7 +370,7 @@ describe "Application 'Hello'" do
 end
 ```
 
-アプリケーションに一つの window があることをテストしています。
+アプリケーションに一つの`window`があることをテストしています。
 実行してみます。
 
 ```
@@ -418,7 +419,7 @@ describe "Application 'Hello'" do
 end
 ```
 
-試しにコントローラのクラスが正しく `MyViewController` であることをテストしました。
+コントローラのクラスが正しく `MyViewController` であることをテストしました。
 テストを実行してみてください。
 
 ```
@@ -439,7 +440,8 @@ rootViewController
 
 正しく通りましたでしょうか。
 
-では次にボタンをタップしたときの動作を検証します。`spec/my_view_controller_spec.rb`を作成し、以下のように記述しました。
+では次にボタンをタップしたときの動作を検証します。
+spec/my_view_controller_spec.rb を作成し、以下のように記述します。
 
 ```
 describe "The 'My View Controller' view" do
@@ -482,14 +484,13 @@ Bacon::Error: "Hello!".==("Hello") failed
 3 specifications (3 requirements), 1 failures, 0 errors
 ```
 
-残念ながらエラーが出てしまいました。
+おっと、残念ながらエラーが出てしまいました。
 spec の中で typo したようです。修正は皆さんにおまかせします。
 
 
 ## 開発おすすめツール、ライブラリ
 
 RubyMotion で開発を行うにあたって、定番のツールを紹介したいと思います。
-iOS 開発を行っている方にとっては既になじみ深いものもありますね。
 
 ### テキストエディタのプラグイン / 拡張
 
@@ -502,13 +503,14 @@ iOS 開発を行っている方にとっては既になじみ深いものもあ�
 - [snipmate-snippets-rubymotion](https://github.com/rcyrus/snipmate-snippets-rubymotion)  
 vim の方はこの snippets と ctags を使うといいと思います。
 
-- [Rubymotion Completion With Emacs](http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/)
+- [Rubymotion Completion With Emacs](http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/)  
 Emacs な方はこのエントリに従って設定するのが良さそうです。
 
 
 ### [Dash](http://itunes.apple.com/jp/app/dash-docs-snippets/id458034879?mt=12)
 
-iOS SDK のリファレンスを参照するために使います。他にも Ruby や Rails のリファレンスも参照できる優れものです。
+iOS SDK のリファレンスを参照するために使います。
+Ruby や Rails のリファレンスも参照できる優れものです。
 
 ### [TestFlight](https://testflightapp.com/)
 
@@ -520,9 +522,9 @@ Adhoc 版アプリを素早く手軽に配布するために使います。
 
 #### [motion-cocoapods](https://github.com/HipByte/motion-cocoapods)
 
-Objective-C 版 Bundler とも言える、ライブラリの依存関係の管理を行う [CocoaPods](http://cocoapods.org) を RubyMotion から簡単に使えるようにした gem です。
+Bundler と同様にライブラリの依存関係の管理を行う [CocoaPods](http://cocoapods.org) を RubyMotion から簡単に使えるようにした gem です。
 
-これのおかげで Objective-C で作られた [AFNetworking](https://github.com/AFNetworking/AFNetworking) などの定番ライブラリを手軽に使うことができます。
+これのおかげで Objective-C で作られた [AFNetworking](https://github.com/AFNetworking/AFNetworking) などの定番ライブラリもとても手軽に使うことができます。
 
 
 #### [motion-testflight](https://github.com/HipByte/motion-testflight)
@@ -547,7 +549,7 @@ spec の実行結果に色を付ける gem です。
 
 ## 情報源、コミュニティ
 
-まだ若い製品であるため、日本語のまとまった情報はまだあまりありません。  
+まだ若い製品であるため、日本語のまとまった情報はまだ多くはありません。
 しばらくは英語の情報を主に見るようにするといいでしょう。
 
 ### 英語
@@ -575,13 +577,18 @@ spec の実行結果に色を付ける gem です。
 
 やや駆け足ではありますが、これから RubyMotion を始めたいと考える方のスタートダッシュをお手伝いできるよう、広く浅くまとめてみました。
 
-また導入検討中の方の参考になるように簡単なコード例を掲載することで、開発の雰囲気やメリット／デメリットを感じていただけたのではないでしょうか。
+また、簡単なコード例をご覧頂くことで開発の雰囲気や手順、メリット／デメリットをある程度感じていただくことができたのではないかと思います。
 
-何か質問等がございましたらどうぞお気軽に facebook グループや Twitter で #rubymotionjp ハッシュタグをつけてつぶやいていただけると、誰かが拾って回答を差し上げることができると思います。
+何か質問等がございましたらどうぞお気軽に [Facebook グループ](https://www.facebook.com/groups/149315595198329/)や Twitter の #rubymotionjp ハッシュタグで相談していただけると、拾える範囲で拾って回答を差し上げることができると思います。
 
-この記事を通じて、多くの方が楽しく iOS アプリの開発ができるようになることを願っています。
+RubyMotion は若くて勢いのあるプロジェクトです。バグも相当減ってきた実感がありますし、次々と便利で新しい機能が追加されています。近々デバッガや`define_method`の追加などの大きなアップデートも控えています。
+
+RubyMotion やこの記事を通じて、多くの方が楽しく iOS アプリの開発ができるようになることを願っています。
 
 
 ## 著者について
+
 海老沢 聡 ([@satococoa](https://twitter.com/))  
 原宿のとある会社でスマートフォンアプリの開発をしています。現在 Rails + RubyMotion でアプリ開発中。
+
+先日 RubyMotion で開発した自身初の iPhone アプリをリリースし、見事 AppStore 無料のトップを頂きました！
